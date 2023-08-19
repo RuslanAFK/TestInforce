@@ -6,4 +6,12 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <EditorConfigFiles Remove="C:\Users\rusla\Desktop\programs\TestInforce\TestInforce\Domain\.editorconfig" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="C:\Users\rusla\Desktop\programs\TestInforce\TestInforce\Domain\.editorconfig" />
+  </ItemGroup>
+
 </Project>
