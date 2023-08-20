@@ -65,5 +65,15 @@ public class TokenManager : ITokenManager
     {
         return DateTime.Now;
     }
-
+    public string GetUsernameOrThrow(ClaimsPrincipal? claimsPrincipal)
+    {
+        var identity = claimsPrincipal?.Identity;
+        var username = identity?.Name;
+        var authenticated = identity?.IsAuthenticated ?? false;
+        if (!authenticated)
+            throw new Exception("Not Authorized");
+        if (username == null)
+            throw new Exception("User not found");
+        return username;
+    }
 }

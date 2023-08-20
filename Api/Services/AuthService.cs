@@ -3,6 +3,7 @@ using Abstractions.Repositories;
 using Abstractions.Services;
 using Domain.DTOs;
 using Domain.Models;
+using System.Security.Claims;
 
 namespace Api.Services;
 
@@ -37,5 +38,11 @@ public class AuthService : IAuthService
             Username = foundUser.Username,
             RoleName = foundUser.IsAdmin ? "Admin" : "User"
         };
+    }
+    public async Task<User> GetUserByClaimsPrincipal(ClaimsPrincipal? claimsPrincipal)
+    {
+        var username = _tokenManager.GetUsernameOrThrow(claimsPrincipal);
+        var user = await _usersRepository.GetByNameAsync(username);
+        return user;
     }
 }
