@@ -1,6 +1,7 @@
 ﻿using Abstractions.Managers;
 using Abstractions.Repositories;
 using Abstractions.Services;
+using Domain.Exceptions;
 using Domain.Models;
 
 namespace Api.Services;
@@ -17,28 +18,28 @@ public class UrlService : IUrlService
         _unitOfWork = unitOfWork;
         _shortenManager = shortenManager;
     }
-    public async Task<List<Url>> GetAllUrls()
+    public async Task<List<Url>> GetAllUrlsAsync()
     {
-        var urls = await _urlRepository.GetAll();
+        var urls = await _urlRepository.GetAllAsync();
         return urls;
     }
 
-    public async Task<Url> GetUrlById(int id)
+    public async Task<Url> GetUrlByIdAsync(int id)
     {
-        var url = await _urlRepository.GetById(id);
+        var url = await _urlRepository.GetByIdAsync(id);
         return url;
     }
 
-    public async Task<Url> GetUrlByToken(string token)
+    public async Task<Url> GetUrlByTokenAsync(string token)
     {
         var shortAddress = _shortenManager.Prefix + token;
-        var url = await _urlRepository.GetByShortAddress(shortAddress);
+        var url = await _urlRepository.GetByShortAddressAsync(shortAddress);
         return url;
     }
 
-    public async Task AddUrl(Url url, User user)
+    public async Task AddUrlAsync(Url url, User user)
     {
-        var urls = await _urlRepository.GetAll();
+        var urls = await _urlRepository.GetAllAsync();
         url = _shortenManager.Shorten(url, urls);
         url.CreatedDate = DateTime.Now;
         url.UserId = user.Id;
@@ -46,11 +47,17 @@ public class UrlService : IUrlService
         await _unitOfWork.CompleteOrThrowAsync();
     }
 
-    public async Task DeleteUrl(int id)
+    public async Task DeleteUrlAsync(Url url, User user)
     {
-        
-        var url = await _urlRepository.GetById(id);
+        if (!IsDeletingAllowed(user, url))
+        {
+            throw new UserNotAuthorizedException();
+        }
         _urlRepository.Remove(url);
         await _unitOfWork.CompleteOrThrowAsync();
+    }
+    private bool IsDeletingAllowed(User user, Url url)
+    {
+        return user.IsAdmin || user.Id == url.UserId;
     }
 }

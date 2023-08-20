@@ -7,6 +7,6 @@ public interface IAuthService
 {
     Task RegisterAsync(User userToCreate);
     Task<(User, string)> GetAuthUserAndTokenAsync(User user);
-    Task<User> GetUserByClaimsPrincipal(ClaimsPrincipal? claimsPrincipal);
+    Task<User> GetUserByClaimsPrincipalAsync(ClaimsPrincipal? claimsPrincipal);
     Task<User> GetUserByUserIdAsync(int userId);
 }

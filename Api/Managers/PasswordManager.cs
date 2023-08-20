@@ -3,7 +3,7 @@ using BCrypt.Net;
 using Domain.Exceptions;
 using Domain.Models;
 
-namespace Api.Services;
+namespace Api.Managers;
 
 public class PasswordManager : IPasswordManager
 {

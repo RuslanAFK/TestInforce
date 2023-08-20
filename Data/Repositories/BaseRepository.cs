@@ -16,7 +16,7 @@ public abstract class BaseRepository<TEntity> : IBaseRepository<TEntity> where T
 
     protected IQueryable<TEntity> Items => _dbContext.Set<TEntity>();
 
-    protected virtual async Task<TEntity> GetBy(Expression<Func<TEntity, bool>> expression)
+    protected virtual async Task<TEntity> GetByAsync(Expression<Func<TEntity, bool>> expression)
     {
         var item = await Items.SingleOrDefaultAsync(expression);
         return GetItemOrThrowNullError(item);
@@ -44,7 +44,7 @@ public abstract class BaseRepository<TEntity> : IBaseRepository<TEntity> where T
         return item;
     }
 
-    protected virtual async Task CheckIfAlreadyFound(Expression<Func<TEntity, bool>> expression)
+    protected virtual async Task CheckIfAlreadyFoundAsync(Expression<Func<TEntity, bool>> expression)
     {
         var foundUser = await Items.SingleOrDefaultAsync(expression);
         if (foundUser is not null)

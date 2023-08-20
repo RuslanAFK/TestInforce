@@ -25,7 +25,7 @@ public class UrlsController : Controller
     [HttpGet]
     public async Task<IActionResult> GetAllUrls()
     {
-        var urls = await _urlService.GetAllUrls();
+        var urls = await _urlService.GetAllUrlsAsync();
         var dto = _mapper.Map<List<Url>, List<UrlDto>>(urls);
         return Ok(dto);
     }
@@ -33,7 +33,7 @@ public class UrlsController : Controller
     [Authorize]
     public async Task<IActionResult> GetUrlDetails(int id)
     {
-        var url = await _urlService.GetUrlById(id);
+        var url = await _urlService.GetUrlByIdAsync(id);
         var dto = _mapper.Map<Url, UrlWithDetailsDto>(url);
         var owner = await _authService.GetUserByUserIdAsync(url.UserId);
         dto.CreatedBy = owner.Username;
@@ -44,27 +44,26 @@ public class UrlsController : Controller
     public async Task<IActionResult> ShortenUrlAndPutInDb(AddUrlDto dto)
     {
         var url = _mapper.Map<AddUrlDto, Url>(dto);
-        var user = await _authService.GetUserByClaimsPrincipal(HttpContext?.User);
-        await _urlService.AddUrl(url, user);
+        var user = await _authService.GetUserByClaimsPrincipalAsync(HttpContext?.User);
+        await _urlService.AddUrlAsync(url, user);
         return NoContent();
     }
     [HttpDelete("{id}")]
     [Authorize]
     public async Task<IActionResult> DeleteUrl(int id)
     {
-        var user = await _authService.GetUserByClaimsPrincipal(HttpContext?.User);
-        if (user.IsAdmin || user.Urls.Any(u => u.Id == id))
-        {
-            await _urlService.DeleteUrl(id);
-            return NoContent();
-        }
-        return Unauthorized();
+        var user = await _authService.GetUserByClaimsPrincipalAsync(HttpContext?.User);
+        var url = await _urlService.GetUrlByIdAsync(id);
+        await _urlService.DeleteUrlAsync(url, user);
+        return NoContent();
     }
+
+    
 
     [HttpGet("/u.sho/{token}")]
     public async Task<IActionResult> MakeRedirect(string token)
     {
-        var url = await _urlService.GetUrlByToken(token);
+        var url = await _urlService.GetUrlByTokenAsync(token);
         return Redirect(url.FullAddress);
     }
 }

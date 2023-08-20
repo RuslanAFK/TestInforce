@@ -1,7 +1,7 @@
 ﻿using Abstractions.Managers;
 using Domain.Models;
 
-namespace Api.Services;
+namespace Api.Managers;
 
 public class ShortenManager : IShortenManager
 {

@@ -11,17 +11,17 @@ public class UserRepository : BaseRepository<User>, IUserRepository
 
     public async Task<User> GetByNameAsync(string name)
     {
-        return await GetBy(e => e.Username == name);
+        return await GetByAsync(e => e.Username == name);
     }
 
     public async Task<User> GetByIdAsync(int id)
     {
-        return await GetBy(e => e.Id == id);
+        return await GetByAsync(e => e.Id == id);
     }
 
     public override async Task AddAsync(User item)
     {
-        await CheckIfAlreadyFound(i => i.Username == item.Username);
+        await CheckIfAlreadyFoundAsync(i => i.Username == item.Username);
         await base.AddAsync(item);
     }
 }

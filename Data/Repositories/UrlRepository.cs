@@ -10,25 +10,25 @@ public class UrlRepository : BaseRepository<Url>, IUrlRepository
     {
     }
 
-    public async Task<List<Url>> GetAll()
+    public async Task<List<Url>> GetAllAsync()
     {
         return await Items.ToListAsync();
     }
 
-    public async Task<Url> GetById(int id)
+    public async Task<Url> GetByIdAsync(int id)
     {
-        return await GetBy(u => u.Id == id);
+        return await GetByAsync(u => u.Id == id);
     }
 
-    public async Task<Url> GetByShortAddress(string shortAddress)
+    public async Task<Url> GetByShortAddressAsync(string shortAddress)
     {
-        return await GetBy(u => u.ShortAddress == shortAddress);
+        return await GetByAsync(u => u.ShortAddress == shortAddress);
     }
 
     public override async Task AddAsync(Url item)
     {
-        await CheckIfAlreadyFound(i => i.FullAddress == item.FullAddress);
-        await CheckIfAlreadyFound(i => i.ShortAddress == item.ShortAddress);
+        await CheckIfAlreadyFoundAsync(i => i.FullAddress == item.FullAddress);
+        await CheckIfAlreadyFoundAsync(i => i.ShortAddress == item.ShortAddress);
         await base.AddAsync(item);
     }
 }

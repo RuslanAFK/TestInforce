@@ -4,9 +4,9 @@ namespace Abstractions.Services;
 
 public interface IUrlService
 {
-    Task<List<Url>> GetAllUrls();
-    Task<Url> GetUrlById(int id);
-    Task<Url> GetUrlByToken(string token);
-    Task AddUrl(Url url, User user);
-    Task DeleteUrl(int id);
+    Task<List<Url>> GetAllUrlsAsync();
+    Task<Url> GetUrlByIdAsync(int id);
+    Task<Url> GetUrlByTokenAsync(string token);
+    Task AddUrlAsync(Url url, User user);
+    Task DeleteUrlAsync(Url url, User user);
 }

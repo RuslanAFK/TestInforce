@@ -7,7 +7,7 @@ using Domain.Models;
 using Microsoft.IdentityModel.Tokens;
 using JwtRegisteredClaimNames = Microsoft.IdentityModel.JsonWebTokens.JwtRegisteredClaimNames;
 
-namespace Api.Services;
+namespace Api.Managers;
 
 public class TokenManager : ITokenManager
 {

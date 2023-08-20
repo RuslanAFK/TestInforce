@@ -33,7 +33,7 @@ public class AuthService : IAuthService
         var token = _tokenManager.GenerateToken(foundUser);
         return (foundUser, token);
     }
-    public async Task<User> GetUserByClaimsPrincipal(ClaimsPrincipal? claimsPrincipal)
+    public async Task<User> GetUserByClaimsPrincipalAsync(ClaimsPrincipal? claimsPrincipal)
     {
         var username = _tokenManager.GetUsernameOrThrow(claimsPrincipal);
         var user = await _usersRepository.GetByNameAsync(username);
