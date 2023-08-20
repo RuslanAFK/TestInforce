@@ -1,4 +1,5 @@
 ﻿using Abstractions.Repositories;
+using Domain.Exceptions;
 using Microsoft.EntityFrameworkCore;
 
 namespace Data.Repositories;
@@ -18,12 +19,12 @@ public class UnitOfWork : IUnitOfWork
             var stateEntries = await _context.SaveChangesAsync();
             if (stateEntries <= 0)
             {
-                throw new Exception("Not successful");
+                throw new BaseException("Operation was not successful.");
             }
         }
         catch (DbUpdateException ex)
         {
-            throw new Exception(ex.Message);
+            throw new BaseException(ex.Message);
         }
     }
 }

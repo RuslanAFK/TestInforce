@@ -1,7 +1,6 @@
 ﻿using Abstractions.Managers;
 using Abstractions.Repositories;
 using Abstractions.Services;
-using Domain.DTOs;
 using Domain.Models;
 using System.Security.Claims;
 
@@ -27,22 +26,23 @@ public class AuthService : IAuthService
         await _usersRepository.AddAsync(userToCreate);
         await _unitOfWork.CompleteOrThrowAsync();
     }
-    public async Task<AuthResponseDto> GetAuthCredentialsAsync(User user)
+    public async Task<(User, string)> GetAuthUserAndTokenAsync(User user)
     {
         var foundUser = await _usersRepository.GetByNameAsync(user.Username);
         _passwordManager.ThrowExceptionIfWrongPassword(user.Password, foundUser.Password);
         var token = _tokenManager.GenerateToken(foundUser);
-        return new AuthResponseDto
-        {
-            Token = token,
-            Username = foundUser.Username,
-            RoleName = foundUser.IsAdmin ? "Admin" : "User"
-        };
+        return (foundUser, token);
     }
     public async Task<User> GetUserByClaimsPrincipal(ClaimsPrincipal? claimsPrincipal)
     {
         var username = _tokenManager.GetUsernameOrThrow(claimsPrincipal);
         var user = await _usersRepository.GetByNameAsync(username);
+        return user;
+    }
+
+    public async Task<User> GetUserByUserIdAsync(int userId)
+    {
+        var user = await _usersRepository.GetByIdAsync(userId);
         return user;
     }
 }

@@ -1,11 +1,9 @@
 ﻿using System.Collections.ObjectModel;
-using System.ComponentModel.DataAnnotations;
 
 namespace Domain.Models
 {
     public class User
     {
-        [Key]
         public int Id { get; set; }
         public string Username { get; set; }
         public string Password { get; set; }

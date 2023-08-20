@@ -4,7 +4,6 @@ using Domain.DTOs;
 using Domain.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System;
 
 namespace Api.Controllers;
 
@@ -36,6 +35,8 @@ public class UrlsController : Controller
     {
         var url = await _urlService.GetUrlById(id);
         var dto = _mapper.Map<Url, UrlWithDetailsDto>(url);
+        var owner = await _authService.GetUserByUserIdAsync(url.UserId);
+        dto.CreatedBy = owner.Username;
         return Ok(dto);
     }
     [HttpPost]
@@ -52,7 +53,6 @@ public class UrlsController : Controller
     public async Task<IActionResult> DeleteUrl(int id)
     {
         var user = await _authService.GetUserByClaimsPrincipal(HttpContext?.User);
-        
         if (user.IsAdmin || user.Urls.Any(u => u.Id == id))
         {
             await _urlService.DeleteUrl(id);

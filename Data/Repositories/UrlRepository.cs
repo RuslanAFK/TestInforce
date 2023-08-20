@@ -17,13 +17,18 @@ public class UrlRepository : BaseRepository<Url>, IUrlRepository
 
     public async Task<Url> GetById(int id)
     {
-        return await Items.SingleOrDefaultAsync(u => u.Id == id)
-            ?? throw new Exception("Not found");
+        return await GetBy(u => u.Id == id);
     }
 
-    public async Task<Url> GetByShortAddress(string shortName)
+    public async Task<Url> GetByShortAddress(string shortAddress)
     {
-        return await Items.SingleOrDefaultAsync(u => u.ShortAddress == shortName)
-               ?? throw new Exception("Not found");
+        return await GetBy(u => u.ShortAddress == shortAddress);
+    }
+
+    public override async Task AddAsync(Url item)
+    {
+        await CheckIfAlreadyFound(i => i.FullAddress == item.FullAddress);
+        await CheckIfAlreadyFound(i => i.ShortAddress == item.ShortAddress);
+        await base.AddAsync(item);
     }
 }

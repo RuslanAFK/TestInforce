@@ -1,5 +1,6 @@
 ﻿using Abstractions.Managers;
 using BCrypt.Net;
+using Domain.Exceptions;
 using Domain.Models;
 
 namespace Api.Services;
@@ -19,11 +20,11 @@ public class PasswordManager : IPasswordManager
             var passwordCorrect =
                 BCrypt.Net.BCrypt.Verify(realPassword, hashedPassword);
             if (!passwordCorrect)
-                throw new Exception("WrongPassword");
+                throw new BaseException("You provided incorrect password.");
         }
         catch (SaltParseException)
         {
-            throw new Exception("PasswordNotParseableException");
+            throw new BaseException("Password is not parseable.");
         }
     }
 }

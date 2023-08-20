@@ -23,8 +23,10 @@ public class AuthController : Controller
     public async Task<IActionResult> Login(LoginDto loginResource)
     {
         var user = _mapper.Map<LoginDto, User>(loginResource);
-        var found = await _authService.GetAuthCredentialsAsync(user);
-        return Ok(found);
+        var (foundUser, token) = await _authService.GetAuthUserAndTokenAsync(user);
+        var response = _mapper.Map<User, AuthResponseDto>(foundUser);
+        response.Token = token;
+        return Ok(response);
     }
 
     [HttpPost("Register")]

@@ -1,5 +1,4 @@
-﻿using Domain.DTOs;
-using Domain.Models;
+﻿using Domain.Models;
 using System.Security.Claims;
 
 namespace Abstractions.Services;
@@ -7,6 +6,7 @@ namespace Abstractions.Services;
 public interface IAuthService
 {
     Task RegisterAsync(User userToCreate);
-    Task<AuthResponseDto> GetAuthCredentialsAsync(User user);
+    Task<(User, string)> GetAuthUserAndTokenAsync(User user);
     Task<User> GetUserByClaimsPrincipal(ClaimsPrincipal? claimsPrincipal);
+    Task<User> GetUserByUserIdAsync(int userId);
 }

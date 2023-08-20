@@ -11,10 +11,10 @@ public class MappingProfile : Profile
     {
         CreateMap<LoginDto, User>();
         CreateMap<RegisterDto, User>();
+        CreateMap<User, AuthResponseDto>();
 
         CreateMap<AddUrlDto, Url>();
         CreateMap<Url, UrlDto>();
-        CreateMap<Url, UrlWithDetailsDto>()
-            .ForMember(d => d.CreatedBy, o => o.AllowNull());
+        CreateMap<Url, UrlWithDetailsDto>();
     }
 }

@@ -1,4 +1,5 @@
-﻿using Domain.Models;
+﻿using System.Reflection;
+using Domain.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace Data;
@@ -14,5 +15,6 @@ public class AppDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
     }
 }

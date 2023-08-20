@@ -3,6 +3,7 @@ using Abstractions.Managers;
 using Abstractions.Repositories;
 using Abstractions.Services;
 using Api;
+using Api.Middleware;
 using Api.Services;
 using Data;
 using Data.Repositories;
@@ -54,7 +55,15 @@ builder.Services.AddAuthentication(x =>
             ValidateIssuer = false
         };
     });
-
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(b =>
+    {
+        b.AllowAnyMethod()
+            .AllowAnyHeader()
+            .WithOrigins("http://localhost:4200");
+    });
+});
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -68,6 +77,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+app.UseMiddleware<ExceptionHandler>();
 
 app.UseHttpsRedirection();
 
@@ -75,5 +85,6 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+app.UseCors();
 
 app.Run();

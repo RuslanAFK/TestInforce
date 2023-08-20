@@ -11,7 +11,7 @@ public class ShortenManager : IShortenManager
     {
         string urlsafe = string.Empty;
         Enumerable.Range(48, 75)
-            .Where(i => i is < 58 or > 64 and < 91 or > 96)
+            .Where(i => i < 58 || i > 64 && i < 91 || i > 96)
             .OrderBy(_ => new Random().Next())
             .ToList()
             .ForEach(i => urlsafe += Convert.ToChar(i));

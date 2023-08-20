@@ -2,6 +2,7 @@
 using System.Security.Claims;
 using System.Security.Cryptography;
 using Abstractions.Managers;
+using Domain.Exceptions;
 using Domain.Models;
 using Microsoft.IdentityModel.Tokens;
 using JwtRegisteredClaimNames = Microsoft.IdentityModel.JsonWebTokens.JwtRegisteredClaimNames;
@@ -31,7 +32,9 @@ public class TokenManager : ITokenManager
 
     private string GetRoleName(User user)
     {
-        return user.IsAdmin ? "Admin" : "User";
+        var adminRole = "Admin";
+        var userRole = "User";
+        return user.IsAdmin ? adminRole : userRole;
     }
     private JwtSecurityToken GenerateTokenObject(IEnumerable<Claim> claims, RsaSecurityKey securityKey)
     {
@@ -71,9 +74,9 @@ public class TokenManager : ITokenManager
         var username = identity?.Name;
         var authenticated = identity?.IsAuthenticated ?? false;
         if (!authenticated)
-            throw new Exception("Not Authorized");
+            throw new UserNotAuthorizedException();
         if (username == null)
-            throw new Exception("User not found");
+            throw new NotFoundException();
         return username;
     }
 }
