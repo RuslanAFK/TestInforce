@@ -1,4 +1,10 @@
+using Abstractions.Managers;
+using Abstractions.Repositories;
+using Abstractions.Services;
+using Api;
+using Api.Services;
 using Data;
+using Data.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -7,6 +13,15 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<AppDbContext>(o
     => o.UseSqlServer(builder.Configuration.GetConnectionString("default")));
+builder.Services.AddAutoMapper(o => o.AddProfile<MappingProfile>());
+
+builder.Services.AddScoped<IAuthService, AuthService>();
+
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+builder.Services.AddScoped<ITokenManager, TokenManager>();
+builder.Services.AddScoped<IPasswordManager, PasswordManager>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
